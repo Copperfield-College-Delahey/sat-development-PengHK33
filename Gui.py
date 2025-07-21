@@ -51,7 +51,7 @@ UnitPriceEntry = ctk.CTkEntry(entryFieldFrame, width=200)
 UnitPriceEntry.grid(row=5, column=0, padx=10, pady=10, sticky="w")
 SupervisorEntry = ctk.CTkEntry(entryFieldFrame, width=200)
 SupervisorEntry.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-companyEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+companyEntry = ctk.CTkComboBox(entryFieldFrame,values=["1","2"], width=200)
 companyEntry.grid(row=9, column=0, padx=10, pady=10, sticky="w")
 
 #Entryframe labels
