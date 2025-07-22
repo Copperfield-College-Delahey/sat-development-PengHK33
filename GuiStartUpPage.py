@@ -15,7 +15,7 @@ app.grid_rowconfigure(2, weight=1) #
 mainBox = ctk.CTkFrame(app, border_width=0)
 mainBox.grid(row=2, column=0, columnspan=2, sticky="nsew",padx=5,pady=5)
 mainBox.grid_rowconfigure(0,weight=1)
-mainBox.grid_rowonfigure(1,weight=1)
+mainBox.grid_rowconfigure(1,weight=1)
 
 #Label
 LogInTitle = ctk.CTkLabel(mainBox, text="INNOVATE INVOICES", font=("Aptos", 30))
@@ -26,7 +26,7 @@ PasswordLabel = ctk.CTkLabel(mainBox, text="Job Address:", font=("Aptos", 12))
 PasswordLabel.grid(row=3, column=0, sticky="w", padx=1, pady=1)
 
 #inputBox
-logInEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+logInEntry = ctk.CTkEntry(mainBox, width=200)
 logInEntry.grid(row=2, column=0, padx=10, pady=10, sticky="w")
-passwordEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+passwordEntry = ctk.CTkEntry(mainBox, width=200)
 passwordEntry.grid(row=4, column=0, padx=10, pady=10, sticky="w")
