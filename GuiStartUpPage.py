@@ -20,16 +20,16 @@ mainBox.grid_columnconfigure(0, weight=1)
 mainBox.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
 # Title (left-aligned)
-logInTitle = ctk.CTkLabel(mainBox, text="INNOVATE INVOICES", font=("Aptos", 24, "bold"), anchor="w", justify="left")
+logInTitle = ctk.CTkLabel(mainBox, text="Add New Company:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
 logInTitle.grid(row=0, column=0, padx=30, pady=(15, 5), sticky="w")
 
-# PO Number
-LogInLabel = ctk.CTkLabel(mainBox, text="Username:", font=("Aptos", 13))
+# Email
+LogInLabel = ctk.CTkLabel(mainBox, text="Email:", font=("Aptos", 13))
 LogInLabel.grid(row=1, column=0, sticky="w", padx=30, pady=(5, 0))
 LogInEntry = ctk.CTkEntry(mainBox, width=290)
 LogInEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
 
-# Job Address
+# Password
 passwordAddressLabel = ctk.CTkLabel(mainBox, text="Password:", font=("Aptos", 13))
 passwordAddressLabel.grid(row=3, column=0, sticky="w", padx=30, pady=(5, 0))
 passwordEntry = ctk.CTkEntry(mainBox, width=290)
