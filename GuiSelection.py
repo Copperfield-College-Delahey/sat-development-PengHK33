@@ -41,8 +41,14 @@ invoiceLayoutLinkLabel.grid(row=5, column=0, sticky="w", padx=30, pady=(5, 0))
 invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
 invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
 
+# Back Button (small, bottom left)
+backButton = ctk.CTkButton(mainBox, text="Back", width=80)
+backButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
+
 # Submit Button (small, bottom left)
 submitButton = ctk.CTkButton(mainBox, text="Submit", width=80)
-submitButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
+submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
+
+
 
 app.mainloop()
