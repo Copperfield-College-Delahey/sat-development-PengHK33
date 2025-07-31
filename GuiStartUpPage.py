@@ -1,8 +1,10 @@
 import customtkinter as ctk
 
-app = ctk.CTk()
-app.title("My App")
-app.geometry("1000x600")
+class LoginPage(ctk.CTkFrame):
+     def __init__(self, master):
+        super().__init__(master)
+        self.grid(row=0, column=0, sticky="nsew")
+
 
 # Center the login box
 app.grid_columnconfigure(0, weight=1)
