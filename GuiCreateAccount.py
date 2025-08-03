@@ -1,20 +1,21 @@
 import customtkinter as ctk
 
 class CreateAccountPage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, controller):
         super().__init__(master)
+        self.controller = controller
         self.grid(row=0, column=0, sticky="nsew")
 
         # Center the login box
-        app.grid_columnconfigure(0, weight=1)
-        app.grid_columnconfigure(1, weight=1)
-        app.grid_columnconfigure(2, weight=1)
-        app.grid_rowconfigure(0, weight=1)
-        app.grid_rowconfigure(1, weight=1)
-        app.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
 
         # Login frame
-        mainBox = ctk.CTkFrame(app, corner_radius=10, width=400, height=400)
+        mainBox = ctk.CTkFrame(self, corner_radius=10, width=400, height=400)
         mainBox.grid(row=1, column=1)
         mainBox.grid_propagate(False)
         mainBox.grid_columnconfigure(0, weight=1)
@@ -36,14 +37,10 @@ class CreateAccountPage(ctk.CTkFrame):
         createPasswordEntry = ctk.CTkEntry(mainBox, width=290)
         createPasswordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
-        # Back Button (small, bottom left)
-        backButton = ctk.CTkButton(mainBox, text="Back", width=80)
+        # Back Button (go back to Login page)
+        backButton = ctk.CTkButton(mainBox, text="Back", width=80, command=self.controller.show_login)
         backButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
-        # Submit Button (small, bottom left)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80)
+        # Submit Button (after creating account go to Main page)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.show_main)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
-
-
-
-        

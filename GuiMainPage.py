@@ -1,8 +1,9 @@
 import customtkinter as ctk
 
 class MainPage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, controller):
         super().__init__(master)
+        self.controller = controller
         self.grid(row=0, column=0, sticky="nsew")
 
         # configure app window grid
@@ -20,15 +21,20 @@ class MainPage(ctk.CTkFrame):
         titleLabel = ctk.CTkLabel(topFrame, text="Innovate Invoice", font=("Aptos", 30))
         titleLabel.grid(row=0, column=0, sticky="w", padx=1, pady=1)
 
+        previousButton = ctk.CTkButton(topFrame, text="Previous Invoices")
+        previousButton.grid(row=0, column=2, padx=10, pady=10, sticky="e")
+
         # Bottom Frame
         bottomFrame = ctk.CTkFrame(self, border_width=0)
         bottomFrame.grid(row=2, column=0, columnspan=2, sticky="nsew", padx=5, pady=5)
         bottomFrame.grid_columnconfigure(0, weight=1)
         bottomFrame.grid_columnconfigure(1, weight=1)
+
         submitButton = ctk.CTkButton(bottomFrame, text="Submit")
         submitButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
-        previousButton = ctk.CTkButton(bottomFrame, text="Previous Invoices")
-        previousButton.grid(row=0, column=0, padx=10, pady=10, sticky="e")
+
+        backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.show_login)
+        backButton.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Entryfield Frame
         entryFieldFrame = ctk.CTkFrame(self, border_width=0)
@@ -67,6 +73,14 @@ class MainPage(ctk.CTkFrame):
         SupervisorLabel.grid(row=6, column=0, sticky="w", padx=1, pady=1)
         companyLabel = ctk.CTkLabel(entryFieldFrame, text="Company:", font=("Aptos", 12))
         companyLabel.grid(row=8, column=0, sticky="w", padx=1, pady=1)
+
+        # Add company button
+        linkFrame = ctk.CTkFrame(entryFieldFrame, fg_color="transparent")
+        linkFrame.grid(row=10, column=0, sticky="w", padx=10, pady=(0, 10))
+
+        addCompanyLink = ctk.CTkLabel(linkFrame, text="Add Company", text_color="#1E90FF", cursor="hand2", font=("Aptos", 12, "underline"))
+        addCompanyLink.grid(row=0, column=0, sticky="w")
+        addCompanyLink.bind("<Button-1>", lambda e: self.controller.show_add_company())
 
         # Preview Frame
         previewFrame = ctk.CTkFrame(self, border_width=0)

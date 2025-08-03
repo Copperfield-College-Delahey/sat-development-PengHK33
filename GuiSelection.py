@@ -1,24 +1,25 @@
 import customtkinter as ctk
 
 class AddCompanyPage(ctk.CTkFrame):
-    def __init__(self, master):
+    def __init__(self, master, controller):
         super().__init__(master)
+        self.controller = controller
         self.grid(row=0, column=0, sticky="nsew")
 
         # Center the login box
-        app.grid_columnconfigure(0, weight=1)
-        app.grid_columnconfigure(1, weight=1)
-        app.grid_columnconfigure(2, weight=1)
-        app.grid_rowconfigure(0, weight=1)
-        app.grid_rowconfigure(1, weight=1)
-        app.grid_rowconfigure(2, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.grid_columnconfigure(2, weight=1)
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(1, weight=1)
+        self.grid_rowconfigure(2, weight=1)
 
         # Login frame
-        mainBox = ctk.CTkFrame(app, corner_radius=10, width=400, height=400)
+        mainBox = ctk.CTkFrame(self, corner_radius=10, width=400, height=400)
         mainBox.grid(row=1, column=1)
         mainBox.grid_propagate(False)
         mainBox.grid_columnconfigure(0, weight=1)
-        mainBox.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6, 7,8,9), weight=1)
+        mainBox.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6, 7, 8, 9), weight=1)
 
         # Title (left-aligned)
         newCompanyTitle = ctk.CTkLabel(mainBox, text="Add New Company:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
@@ -42,13 +43,10 @@ class AddCompanyPage(ctk.CTkFrame):
         invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
         invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
 
-        # Back Button (small, bottom left)
-        backButton = ctk.CTkButton(mainBox, text="Back", width=80)
-        backButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
+        # Back Button (goes back to Mainpage)
+        cancelButton = ctk.CTkButton(mainBox, text="Cancel", width=80, command=self.controller.show_main)
+        cancelButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
-        # Submit Button (small, bottom left)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80)
+        # Submit Button (you can later change this to save data, then go to another page)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.show_main)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
-
-
-
