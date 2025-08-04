@@ -30,7 +30,7 @@ class MainPage(ctk.CTkFrame):
         bottomFrame.grid_columnconfigure(0, weight=1)
         bottomFrame.grid_columnconfigure(1, weight=1)
 
-        submitButton = ctk.CTkButton(bottomFrame, text="Submit")
+        submitButton = ctk.CTkButton(bottomFrame, text="Submit", )
         submitButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
         backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.show_login)

@@ -22,7 +22,7 @@ class CreateAccountPage(ctk.CTkFrame):
         mainBox.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
         # Title (left-aligned)
-        createAccountTitle = ctk.CTkLabel(mainBox, text="Create Acco", font=("Aptos", 24, "bold"), anchor="w", justify="left")
+        createAccountTitle = ctk.CTkLabel(mainBox, text="Create Account:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
         createAccountTitle.grid(row=0, column=0, padx=30, pady=(15, 5), sticky="w")
 
         # Add email for account

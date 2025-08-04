@@ -2,7 +2,7 @@ import customtkinter as ctk
 
 from GuiStartUpPage import LoginPage
 from GuiMainPage import MainPage
-from GuiSelection import AddCompanyPage
+from GuiAddCompany import AddCompanyPage
 from GuiCreateAccount import CreateAccountPage
 
 class App(ctk.CTk):
