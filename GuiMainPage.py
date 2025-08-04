@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from Invoice import Invoice
 
 class MainPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -30,7 +31,7 @@ class MainPage(ctk.CTkFrame):
         bottomFrame.grid_columnconfigure(0, weight=1)
         bottomFrame.grid_columnconfigure(1, weight=1)
 
-        submitButton = ctk.CTkButton(bottomFrame, text="Submit", )
+        submitButton = ctk.CTkButton(bottomFrame, text="Submit",command=self.getInvoiceData) 
         submitButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
         backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.show_login)
@@ -51,16 +52,16 @@ class MainPage(ctk.CTkFrame):
         entryFieldFrame.grid_rowconfigure(9, weight=1)
 
         # Entryframe Entryfields
-        poNumberEntry = ctk.CTkEntry(entryFieldFrame, width=200)
-        poNumberEntry.grid(row=1, column=0, padx=10, pady=10, sticky="w")
-        jobAddressEntry = ctk.CTkEntry(entryFieldFrame, width=200)
-        jobAddressEntry.grid(row=3, column=0, padx=10, pady=10, sticky="w")
-        UnitPriceEntry = ctk.CTkEntry(entryFieldFrame, width=200)
-        UnitPriceEntry.grid(row=5, column=0, padx=10, pady=10, sticky="w")
-        SupervisorEntry = ctk.CTkEntry(entryFieldFrame, width=200)
-        SupervisorEntry.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-        companyEntry = ctk.CTkComboBox(entryFieldFrame, values=["1", "2"], width=200)
-        companyEntry.grid(row=9, column=0, padx=10, pady=10, sticky="w")
+        self.poNumberEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+        self.poNumberEntry.grid(row=1, column=0, padx=10, pady=10, sticky="w")
+        self.jobAddressEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+        self.jobAddressEntry.grid(row=3, column=0, padx=10, pady=10, sticky="w")
+        self.UnitPriceEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+        self.UnitPriceEntry.grid(row=5, column=0, padx=10, pady=10, sticky="w")
+        self.SupervisorEntry = ctk.CTkEntry(entryFieldFrame, width=200)
+        self.SupervisorEntry.grid(row=7, column=0, padx=10, pady=10, sticky="w")
+        self.companyEntry = ctk.CTkComboBox(entryFieldFrame, values=["1", "2"], width=200)
+        self.companyEntry.grid(row=9, column=0, padx=10, pady=10, sticky="w")
 
         # Entryframe labels
         poNumberLabel = ctk.CTkLabel(entryFieldFrame, text="Po Number:", font=("Aptos", 12))
@@ -87,3 +88,17 @@ class MainPage(ctk.CTkFrame):
         previewFrame.grid(row=1, column=1, sticky="nsew", padx=5, pady=5)
         previewFrame.grid_columnconfigure(0, weight=1)
         previewFrame.grid_columnconfigure(1, weight=0)
+    
+    def getInvoiceData(self):
+        invoice = Invoice(
+            poNumber = self.poNumberEntry.get(),
+            jobAddress = self.jobAddressEntry.get(),
+            unitPrices = self.UnitPriceEntry.get(),
+            supervisor = self.SupervisorEntry.get(),
+            companyEmailAddress="placeholder@gmail.com",  # Placeholder for email address
+            Company = self.companyEntry.get()
+        )
+        
+        print(invoice.poNumber, invoice.jobAddress, invoice.unitPrices, invoice.supervisor, invoice.companyEmailAddress, invoice.Company)
+        
+        return invoice
