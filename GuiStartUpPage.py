@@ -44,11 +44,11 @@ class LoginPage(ctk.CTkFrame):
 
         createAccountButton = ctk.CTkLabel(linkRow, text="Create Account", text_color="#1E90FF", cursor="hand2")
         createAccountButton.grid(row=0, column=0, sticky="w")
-        createAccountButton.bind("<Button-1>", lambda e: self.controller.show_create_account())
+        createAccountButton.bind("<Button-1>", lambda e: self.controller.showCreateAccount())
 
         forgotPasswordButton = ctk.CTkLabel(linkRow, text="Forgot Password?", text_color="#1E90FF", cursor="hand2")
         forgotPasswordButton.grid(row=0, column=1, sticky="e")
 
         # Submit Button (small, bottom left)
-        logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.controller.show_main)
+        logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.controller.showMain)
         logInButton.grid(row=6, column=0, padx=30, pady=(15, 10), sticky="w")

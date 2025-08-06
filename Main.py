@@ -4,12 +4,13 @@ from GuiStartUpPage import LoginPage
 from GuiMainPage import MainPage
 from GuiAddCompany import AddCompanyPage
 from GuiCreateAccount import CreateAccountPage
+from GuiPreviousInvoice import PreviousInvoicesPage
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title("My App")
+        self.title("Innvovate Invoices")
         self.geometry("1000x600")
 
         # Configure the layout
@@ -35,14 +36,18 @@ class App(ctk.CTk):
         self.createAccountPage = CreateAccountPage(self.pageContainer, self)
         self.createAccountPage.grid(row=0, column=0, sticky="nsew")
 
+        self.previousInvoicesPage = PreviousInvoicesPage(self.pageContainer, self)
+        self.previousInvoicesPage.grid(row=0, column=0, sticky="nsew")
+
         # Show login page first
         self.loginPage.tkraise()
 
     # Optional helper methods
-    def show_login(self): self.loginPage.tkraise()
-    def show_main(self): self.mainPage.tkraise()
-    def show_add_company(self): self.addCompanyPage.tkraise()
-    def show_create_account(self): self.createAccountPage.tkraise()
+    def showLogin(self): self.loginPage.tkraise()
+    def showMain(self): self.mainPage.tkraise()
+    def showAddCompany(self): self.addCompanyPage.tkraise()
+    def showCreateAccount(self): self.createAccountPage.tkraise()
+    def showPreviousInvoices(self): self.previousInvoicesPage.tkraise()
 
 if __name__ == "__main__":
     app = App()

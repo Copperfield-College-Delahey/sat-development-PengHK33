@@ -44,9 +44,9 @@ class AddCompanyPage(ctk.CTkFrame):
         invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Back Button (goes back to Mainpage)
-        cancelButton = ctk.CTkButton(mainBox, text="Cancel", width=80, command=self.controller.show_main)
+        cancelButton = ctk.CTkButton(mainBox, text="Cancel", width=80, command=self.controller.showMain)
         cancelButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
         # Submit Button (you can later change this to save data, then go to another page)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.show_main)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.showMain)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")

@@ -38,9 +38,9 @@ class CreateAccountPage(ctk.CTkFrame):
         createPasswordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Back Button (go back to Login page)
-        backButton = ctk.CTkButton(mainBox, text="Back", width=80, command=self.controller.show_login)
+        backButton = ctk.CTkButton(mainBox, text="Back", width=80, command=self.controller.showLogin)
         backButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
         # Submit Button (after creating account go to Main page)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.show_main)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.showMain)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")

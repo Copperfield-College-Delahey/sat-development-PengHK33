@@ -22,7 +22,7 @@ class MainPage(ctk.CTkFrame):
         titleLabel = ctk.CTkLabel(topFrame, text="Innovate Invoice", font=("Aptos", 30))
         titleLabel.grid(row=0, column=0, sticky="w", padx=1, pady=1)
 
-        previousButton = ctk.CTkButton(topFrame, text="Previous Invoices")
+        previousButton = ctk.CTkButton(topFrame, text="Previous Invoices", command=self.controller.showPreviousInvoices)
         previousButton.grid(row=0, column=2, padx=10, pady=10, sticky="e")
 
         # Bottom Frame
@@ -34,7 +34,7 @@ class MainPage(ctk.CTkFrame):
         submitButton = ctk.CTkButton(bottomFrame, text="Submit",command=self.getInvoiceData) 
         submitButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
-        backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.show_login)
+        backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.showLogin)
         backButton.grid(row=0, column=0, padx=10, pady=10, sticky="w")
 
         # Entryfield Frame
@@ -81,7 +81,7 @@ class MainPage(ctk.CTkFrame):
 
         addCompanyLink = ctk.CTkLabel(linkFrame, text="Add Company", text_color="#1E90FF", cursor="hand2", font=("Aptos", 12, "underline"))
         addCompanyLink.grid(row=0, column=0, sticky="w")
-        addCompanyLink.bind("<Button-1>", lambda e: self.controller.show_add_company())
+        addCompanyLink.bind("<Button-1>", lambda e: self.controller.showAddCompany())
 
         # Preview Frame
         previewFrame = ctk.CTkFrame(self, border_width=0)

@@ -9,6 +9,10 @@ class Invoice:
         self.companyEmailAddress = companyEmailAddress
         self.Company = Company
 
-    
-        
+class Company:
+    def __init__(self,CompanyName,companyEmailAddress,invoiceLayoutLink):
+        self.Company = Company
+        self.comapnyEmail = companyEmailAddress
+        self.invoiceLayoutLink = invoiceLayoutLink
+
 
