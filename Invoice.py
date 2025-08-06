@@ -1,9 +1,6 @@
 import customtkinter as ctk
 
-class Invoice: .
-"
-
-3
+class Invoice: 
     def __init__(self,poNumber,jobAddress, unitPrices, supervisor, companyEmailAddress, Company):
         self.poNumber = poNumber
         self.jobAddress = jobAddress
