@@ -1,4 +1,8 @@
 import customtkinter as ctk
+import json
+import os
+
+USERS_FILE = "users.json"
 
 class LoginPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -22,7 +26,7 @@ class LoginPage(ctk.CTkFrame):
         mainBox.grid_rowconfigure((0, 1, 2, 3, 4, 5, 6, 7), weight=1)
 
         # Title (left-aligned)
-        logInTitle = ctk.CTkLabel(mainBox, text="Add New Company:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
+        logInTitle = ctk.CTkLabel(mainBox, text="Log in:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
         logInTitle.grid(row=0, column=0, padx=30, pady=(15, 5), sticky="w")
 
         # Email
@@ -52,3 +56,33 @@ class LoginPage(ctk.CTkFrame):
         # Submit Button (small, bottom left)
         logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.controller.showMain)
         logInButton.grid(row=6, column=0, padx=30, pady=(15, 10), sticky="w")
+    
+    def login(self):
+        email = self.LogInEntry.get().strip()
+        password = self.passwordEntry.get().strip()
+
+        if not email or not password:
+            print("Please enter both email and password.")
+            return
+
+        if not os.path.exists(USERS_FILE):
+            print("No accounts found. Please create an account first.")
+            return
+
+        with open(USERS_FILE, "r") as f:
+            users = json.load(f)
+
+        if email not in users:
+            print("Account does not exist.")
+            return
+
+        if users[email]["password"] != password:
+            print("Incorrect password.")
+            return
+
+        # Set current logged-in user
+        self.controller.current_user = email
+        print(f"Logged in as {email}")
+
+        # Go to main page
+        self.controller.showMain()

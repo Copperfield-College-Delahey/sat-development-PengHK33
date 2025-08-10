@@ -1,4 +1,8 @@
 import customtkinter as ctk
+import json
+import os
+
+USERS_FILE = "users.json"
 
 class CreateAccountPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -44,3 +48,35 @@ class CreateAccountPage(ctk.CTkFrame):
         # Submit Button (after creating account go to Main page)
         submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.showMain)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
+
+    def saveAccount(self):
+        email = self.addNewEmailEntry.get().strip()
+        password = self.createPasswordEntry.get().strip()
+
+        if not email or not password:
+            print("Please enter both email and password.")
+            return
+
+        # Load existing users
+        if os.path.exists(USERS_FILE):
+            with open(USERS_FILE, "r") as f:
+                users = json.load(f)
+        else:
+            users = {}
+
+        if email in users:
+            print("Account already exists!")
+            return
+
+        # Save new user with their own data file
+        users[email] = {
+            "password": password,
+            "invoices": [],
+            "companies": []
+        }
+
+        with open(USERS_FILE, "w") as f:
+            json.dump(users, f, indent=4)
+
+        print(f"Account created for {email}")
+        self.controller.showLogin()

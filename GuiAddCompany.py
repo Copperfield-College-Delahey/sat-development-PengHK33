@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from Invoice import Company
 
 class AddCompanyPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -28,25 +29,36 @@ class AddCompanyPage(ctk.CTkFrame):
         # New Company Name
         CompanNameLabel = ctk.CTkLabel(mainBox, text="Company Name:", font=("Aptos", 13))
         CompanNameLabel.grid(row=1, column=0, sticky="w", padx=30, pady=(5, 0))
-        CompanNameEntry = ctk.CTkEntry(mainBox, width=290)
-        CompanNameEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.companyNameEntry = ctk.CTkEntry(mainBox, width=290)
+        self.companyNameEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Company Email
         companyEmailLabel = ctk.CTkLabel(mainBox, text="Company Email address", font=("Aptos", 13))
         companyEmailLabel.grid(row=3, column=0, sticky="w", padx=30, pady=(5, 0))
-        companyEmailEntry = ctk.CTkEntry(mainBox, width=290)
-        companyEmailEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.companyEmailEntry = ctk.CTkEntry(mainBox, width=290)
+        self.companyEmailEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Google Form layout Link
         invoiceLayoutLinkLabel = ctk.CTkLabel(mainBox, text="Company Email address", font=("Aptos", 13))
         invoiceLayoutLinkLabel.grid(row=5, column=0, sticky="w", padx=30, pady=(5, 0))
-        invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
-        invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
+        self.invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Back Button (goes back to Mainpage)
         cancelButton = ctk.CTkButton(mainBox, text="Cancel", width=80, command=self.controller.showMain)
         cancelButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
         # Submit Button (you can later change this to save data, then go to another page)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.showMain)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.saveCompanyInfo)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
+
+    def saveCompanyInfo(self):
+        # Get entered values
+        name = self.companyNameEntry.get()
+        email = self.companyEmailEntry.get()
+        layout = self.invoiceLayoutLinkEntry.get()
+         
+        newCompany = Company(name, email, layout)
+        self.controller.companyList.append(newCompany)
+                
+        self.controller.showMain()

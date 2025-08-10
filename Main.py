@@ -9,6 +9,7 @@ from GuiPreviousInvoice import PreviousInvoicesPage
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+        self.companyList = []
 
         self.title("Innvovate Invoices")
         self.geometry("1000x600")
