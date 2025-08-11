@@ -32,14 +32,14 @@ class LoginPage(ctk.CTkFrame):
         # Email
         LogInLabel = ctk.CTkLabel(mainBox, text="Email:", font=("Aptos", 13))
         LogInLabel.grid(row=1, column=0, sticky="w", padx=30, pady=(5, 0))
-        LogInEntry = ctk.CTkEntry(mainBox, width=290)
-        LogInEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.LogInEntry = ctk.CTkEntry(mainBox, width=290)
+        self.LogInEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Password
         passwordAddressLabel = ctk.CTkLabel(mainBox, text="Password:", font=("Aptos", 13))
         passwordAddressLabel.grid(row=3, column=0, sticky="w", padx=30, pady=(5, 0))
-        passwordEntry = ctk.CTkEntry(mainBox, width=290)
-        passwordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.passwordEntry = ctk.CTkEntry(mainBox, width=290)
+        self.passwordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Create Account and Forgot Password Text Buttons
         linkRow = ctk.CTkFrame(mainBox, fg_color="transparent")
@@ -54,10 +54,10 @@ class LoginPage(ctk.CTkFrame):
         forgotPasswordButton.grid(row=0, column=1, sticky="e")
 
         # Submit Button (small, bottom left)
-        logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.controller.showMain)
+        logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.logIn)
         logInButton.grid(row=6, column=0, padx=30, pady=(15, 10), sticky="w")
     
-    def login(self):
+    def logIn(self):
         email = self.LogInEntry.get().strip()
         password = self.passwordEntry.get().strip()
 

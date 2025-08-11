@@ -32,21 +32,21 @@ class CreateAccountPage(ctk.CTkFrame):
         # Add email for account
         addNewEmailLabel = ctk.CTkLabel(mainBox, text="Email Address:", font=("Aptos", 13))
         addNewEmailLabel.grid(row=1, column=0, sticky="w", padx=30, pady=(5, 0))
-        addNewEmailEntry = ctk.CTkEntry(mainBox, width=290)
-        addNewEmailEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.addNewEmailEntry = ctk.CTkEntry(mainBox, width=290)
+        self.addNewEmailEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Create Password
         createPasswordLabel = ctk.CTkLabel(mainBox, text="Password:", font=("Aptos", 13))
         createPasswordLabel.grid(row=3, column=0, sticky="w", padx=30, pady=(5, 0))
-        createPasswordEntry = ctk.CTkEntry(mainBox, width=290)
-        createPasswordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
+        self.createPasswordEntry = ctk.CTkEntry(mainBox, width=290)
+        self.createPasswordEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Back Button (go back to Login page)
         backButton = ctk.CTkButton(mainBox, text="Back", width=80, command=self.controller.showLogin)
         backButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
         # Submit Button (after creating account go to Main page)
-        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.controller.showMain)
+        submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.saveAccount)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
 
     def saveAccount(self):
