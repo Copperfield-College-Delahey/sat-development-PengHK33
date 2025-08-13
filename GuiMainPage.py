@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from Invoice import Invoice
+import json, os                       
+from AiUserandDatastorage import USER_DATA_DIR
 
 class MainPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -60,8 +62,10 @@ class MainPage(ctk.CTkFrame):
         self.UnitPriceEntry.grid(row=5, column=0, padx=10, pady=10, sticky="w")
         self.SupervisorEntry = ctk.CTkEntry(entryFieldFrame, width=200)
         self.SupervisorEntry.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-        self.companyEntry = ctk.CTkComboBox(entryFieldFrame, values=["1", "2"], width=200)
+        self.companyEntry = ctk.CTkComboBox(entryFieldFrame, values=[], width=200)
         self.companyEntry.grid(row=9, column=0, padx=10, pady=10, sticky="w")
+
+        self.load_companies()
 
         # Entryframe labels
         poNumberLabel = ctk.CTkLabel(entryFieldFrame, text="Po Number:", font=("Aptos", 12))
@@ -102,3 +106,22 @@ class MainPage(ctk.CTkFrame):
         print(invoice.poNumber, invoice.jobAddress, invoice.unitPrices, invoice.supervisor, invoice.companyEmailAddress, invoice.Company)
         
         return invoice
+
+    def load_companies(self):          
+        """Load companies for the logged-in user and update dropdown."""
+        username = self.controller.current_user.username
+        user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
+
+        if os.path.exists(user_file):
+            with open(user_file, "r") as f:
+                data = json.load(f)
+            companies = [c["name"] for c in data.get("companies", [])]
+        else:
+            companies = []
+
+        self.companyEntry.configure(values=companies)
+
+        if companies:
+            self.companyEntry.set(companies[0])  # select first by default
+        else:
+            self.companyEntry.set("")            # leave empty if no companies

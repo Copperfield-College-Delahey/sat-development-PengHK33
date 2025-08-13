@@ -1,5 +1,8 @@
 import customtkinter as ctk
 from Invoice import Company
+import json, os                       
+from AiUserandDatastorage import USER_DATA_DIR
+
 
 class AddCompanyPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -58,7 +61,39 @@ class AddCompanyPage(ctk.CTkFrame):
         email = self.companyEmailEntry.get()
         layout = self.invoiceLayoutLinkEntry.get()
          
-        newCompany = Company(name, email, layout)
-        self.controller.companyList.append(newCompany)
-                
+        if not name:                   
+            print("Company name is required.")
+            return
+
+        # Build company object
+        newCompany = Company(name, email, layout)  
+
+        # Path to the logged-in user's file     
+        username = self.controller.current_user.username
+        user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
+
+        # Load existing data                     
+        if os.path.exists(user_file):
+            with open(user_file, "r") as f:
+                data = json.load(f)
+        else:
+            data = {"companies": [], "invoices": []}
+
+        # Add the new company                    
+        data["companies"].append({
+            "name": newCompany.name,
+            "email": newCompany.email,
+            "layout": newCompany.layout
+        })
+
+        # Save back to file                  
+        with open(user_file, "w") as f:
+            json.dump(data, f, indent=4)
+
+        print(f"Saved company '{name}' for user '{username}'")  
+
+        # Refresh the MainPage dropdown          
+        self.controller.pages["MainPage"].load_companies()
+
+        # Go back to main page 
         self.controller.showMain()
