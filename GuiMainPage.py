@@ -65,8 +65,6 @@ class MainPage(ctk.CTkFrame):
         self.companyEntry = ctk.CTkComboBox(entryFieldFrame, values=[], width=200)
         self.companyEntry.grid(row=9, column=0, padx=10, pady=10, sticky="w")
 
-        self.load_companies()
-
         # Entryframe labels
         poNumberLabel = ctk.CTkLabel(entryFieldFrame, text="Po Number:", font=("Aptos", 12))
         poNumberLabel.grid(row=0, column=0, sticky="w", padx=1, pady=1)
@@ -109,7 +107,7 @@ class MainPage(ctk.CTkFrame):
 
     def load_companies(self):          
         """Load companies for the logged-in user and update dropdown."""
-        username = self.controller.current_user.username
+        username = self.controller.current_user
         user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
 
         if os.path.exists(user_file):

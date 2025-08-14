@@ -69,7 +69,7 @@ class AddCompanyPage(ctk.CTkFrame):
         newCompany = Company(name, email, layout)  
 
         # Path to the logged-in user's file     
-        username = self.controller.current_user.username
+        username = self.controller.current_user
         user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
 
         # Load existing data                     

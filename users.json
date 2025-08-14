@@ -3,5 +3,10 @@
         "password": "a",
         "invoices": [],
         "companies": []
+    },
+    "peng": {
+        "password": "a",
+        "invoices": [],
+        "companies": []
     }
 }

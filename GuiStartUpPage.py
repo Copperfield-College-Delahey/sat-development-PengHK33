@@ -84,5 +84,7 @@ class LoginPage(ctk.CTkFrame):
         self.controller.current_user = email
         print(f"Logged in as {email}")
 
+        self.controller.mainPage.load_companies()
+
         # Go to main page
         self.controller.showMain()
