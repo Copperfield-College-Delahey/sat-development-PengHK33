@@ -93,7 +93,7 @@ class AddCompanyPage(ctk.CTkFrame):
         print(f"Saved company '{name}' for user '{username}'")  
 
         # Refresh the MainPage dropdown          
-        self.controller.pages["MainPage"].load_companies()
+        self.controller.mainPage.load_companies()
 
         # Go back to main page 
         self.controller.showMain()
