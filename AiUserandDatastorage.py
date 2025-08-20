@@ -1,4 +1,3 @@
-# user_manager.py
 import os, json, hashlib
 
 DATA_DIR = "data"
