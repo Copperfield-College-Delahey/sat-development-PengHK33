@@ -1,8 +1,8 @@
+#GuiCreateAccount.py: 
 import customtkinter as ctk
 import json
 import os
 from tkinter import messagebox
-from AiUserandDatastorage import UserManager
 
 USERS_FILE = "users.json"
 
@@ -75,12 +75,32 @@ class CreateAccountPage(ctk.CTkFrame):
         if not any(char.isupper() for char in password):
             messagebox.showerror("Error", "Password must contain at least one uppercase letter.")
             return
-        
-        #Use UserManager instead of writing JSON directly
-        success = self.manager.add_user(email, password)
-        if not success:
+
+        # --- Load existing users ---
+        if os.path.exists(USERS_FILE):
+            try:
+                with open(USERS_FILE, "r") as f:
+                    users = json.load(f)
+            except json.JSONDecodeError:
+                users = {}
+        else:
+            users = {}
+
+        # --- Check if account exists ---
+        if email in users:
             messagebox.showerror("Error", "Account already exists!")
             return
-        
+
+        # --- Save new user ---
+        users[email] = {
+            "password": password,
+            "invoices": [],
+            "companies": []
+        }
+
+        with open(USERS_FILE, "w") as f:
+            json.dump(users, f, indent=4)
+
         messagebox.showinfo("Success", f"Account created for {email}")
         self.controller.showLogin()
+        self.addNewEmailEntry.delete(0, 'end') 

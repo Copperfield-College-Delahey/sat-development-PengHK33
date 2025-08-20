@@ -1,4 +1,4 @@
-# GuiPreviousInvoice.py:
+#GuiPreviousInvoice.py:
 import customtkinter as ctk
 
 class PreviousInvoicesPage(ctk.CTkFrame):
@@ -25,5 +25,4 @@ class PreviousInvoicesPage(ctk.CTkFrame):
         # Back button
         back_button = ctk.CTkButton(self, text="Back", command=self.controller.showMain)
         back_button.grid(row=2, column=0, padx=20, pady=15, sticky="w")
-
   

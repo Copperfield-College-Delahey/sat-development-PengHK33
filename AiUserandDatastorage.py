@@ -1,3 +1,4 @@
+# AiUserandDatastorage.py
 import os, json, hashlib
 
 DATA_DIR = "data"
@@ -47,3 +48,11 @@ class UserManager:
             if user.username == username:
                 return user
         return None
+
+
+
+
+
+
+
+

@@ -9,6 +9,11 @@
             "name": "Company 2",
             "email": "Company2@gmail.com",
             "layout": "Company"
+        },
+        {
+            "name": "comapany",
+            "email": "company@gmail.com",
+            "layout": "company"
         }
     ],
     "invoices": []

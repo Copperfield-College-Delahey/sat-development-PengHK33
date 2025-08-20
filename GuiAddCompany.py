@@ -1,4 +1,4 @@
-# GuiAddCompany.py:
+#GuiAddCompany.py:
 import customtkinter as ctk
 from Invoice import Company
 import json, os                       
@@ -103,3 +103,10 @@ class AddCompanyPage(ctk.CTkFrame):
 
         # Go back to main page 
         self.controller.showMain()
+
+
+
+
+
+
+
