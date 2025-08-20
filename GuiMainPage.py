@@ -3,6 +3,7 @@ import customtkinter as ctk
 from Invoice import Invoice
 import json, os                       
 from AiUserandDatastorage import USER_DATA_DIR
+from tkinter import messagebox
 
 class MainPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -92,18 +93,43 @@ class MainPage(ctk.CTkFrame):
         previewFrame.grid_columnconfigure(0, weight=1)
         previewFrame.grid_columnconfigure(1, weight=0)
     
+    
     def getInvoiceData(self):
+        poNumber = self.poNumberEntry.get().strip()
+        jobAddress = self.jobAddressEntry.get().strip()
+        unitPrice = self.UnitPriceEntry.get().strip()
+        supervisor = self.SupervisorEntry.get().strip()
+        company = self.companyEntry.get().strip()
+
+        # --- Validation checks ---
+        if not poNumber or not jobAddress or not unitPrice or not supervisor or not company:
+            messagebox.showerror("Error", "All fields must be filled in.")
+            return None
+
+        # PO Number must contain only digits and "/" somewhere
+        if "/" not in poNumber or not all(part.isdigit() for part in poNumber.split("/") if part):
+            messagebox.showerror("Error", "PO Number must be numeric and contain '/'. Example: 123/45")
+            return None
+
+        # Unit price must be a float or integer
+        try:
+            float(unitPrice)
+        except ValueError:
+            messagebox.showerror("Error", "Unit Price must be a number (integer or float).")
+            return None
+            
+
+        # --- If all good, create invoice ---
         invoice = Invoice(
-            poNumber = self.poNumberEntry.get(),
-            jobAddress = self.jobAddressEntry.get(),
-            unitPrices = self.UnitPriceEntry.get(),
-            supervisor = self.SupervisorEntry.get(),
-            companyEmailAddress="placeholder@gmail.com",  # Placeholder for email address
-            Company = self.companyEntry.get()
+            poNumber=poNumber,
+            jobAddress=jobAddress,
+            unitPrices=float(unitPrice),  # store as flaot
+            supervisor=supervisor,
+            companyEmailAddress="placeholder@gmail.com",
+            Company=company
         )
-        
         print(invoice.poNumber, invoice.jobAddress, invoice.unitPrices, invoice.supervisor, invoice.companyEmailAddress, invoice.Company)
-        
+
         return invoice
 
     def load_companies(self):          
