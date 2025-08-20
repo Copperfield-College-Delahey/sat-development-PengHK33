@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import json
 import os
+from tkinter import messagebox
+from AiUserandDatastorage import UserManager
 
 USERS_FILE = "users.json"
 
@@ -9,6 +11,7 @@ class LoginPage(ctk.CTkFrame):
         super().__init__(master)
         self.controller = controller
         self.grid(row=0, column=0, sticky="nsew")
+        self.manager = UserManager(USERS_FILE)
 
         # Center the login box
         self.grid_columnconfigure(0, weight=1)
@@ -57,34 +60,32 @@ class LoginPage(ctk.CTkFrame):
         logInButton = ctk.CTkButton(mainBox, text="Log In", width=80, command=self.logIn)
         logInButton.grid(row=6, column=0, padx=30, pady=(15, 10), sticky="w")
     
+    import json
+
     def logIn(self):
         email = self.LogInEntry.get().strip()
         password = self.passwordEntry.get().strip()
 
         if not email or not password:
-            print("Please enter both email and password.")
+            messagebox.showerror("Error", "Please enter both email and password.")
             return
 
         if not os.path.exists(USERS_FILE):
-            print("No accounts found. Please create an account first.")
+            messagebox.showerror("Error", "No accounts found. Please create an account first.")
             return
 
-        with open(USERS_FILE, "r") as f:
-            users = json.load(f)
-
-        if email not in users:
-            print("Account does not exist.")
+        # Load users safely
+        user = self.manager.get_user(email)
+        if not user:
+            messagebox.showerror("Error", "Account does not exist.")
             return
 
-        if users[email]["password"] != password:
-            print("Incorrect password.")
+        if not user.check_password(password):
+            messagebox.showerror("Error", "Incorrect password.")
             return
 
-        # Set current logged-in user
-        self.controller.current_user = email
-        print(f"Logged in as {email}")
-
-        self.controller.mainPage.load_companies()
-
-        # Go to main page
+        # Success
+        self.controller.current_user = user   # <-- store full User object
+        messagebox.showinfo("Success", f"Logged in as {email}")
+        self.controller.mainPage.load_companies()  # <-- load companies after login
         self.controller.showMain()

@@ -1,11 +1,6 @@
 {
-    "a": {
-        "password": "a",
-        "invoices": [],
-        "companies": []
-    },
-    "peng": {
-        "password": "a",
+    "peng@gmail.com": {
+        "password": "Password1",
         "invoices": [],
         "companies": []
     }

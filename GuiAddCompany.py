@@ -2,6 +2,7 @@ import customtkinter as ctk
 from Invoice import Company
 import json, os                       
 from AiUserandDatastorage import USER_DATA_DIR
+from tkinter import messagebox
 
 
 class AddCompanyPage(ctk.CTkFrame):
@@ -36,13 +37,13 @@ class AddCompanyPage(ctk.CTkFrame):
         self.companyNameEntry.grid(row=2, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Company Email
-        companyEmailLabel = ctk.CTkLabel(mainBox, text="Company Email address", font=("Aptos", 13))
+        companyEmailLabel = ctk.CTkLabel(mainBox, text="Company Email address:", font=("Aptos", 13))
         companyEmailLabel.grid(row=3, column=0, sticky="w", padx=30, pady=(5, 0))
         self.companyEmailEntry = ctk.CTkEntry(mainBox, width=290)
         self.companyEmailEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
         # Google Form layout Link
-        invoiceLayoutLinkLabel = ctk.CTkLabel(mainBox, text="Company Email address", font=("Aptos", 13))
+        invoiceLayoutLinkLabel = ctk.CTkLabel(mainBox, text="Company layout link:", font=("Aptos", 13))
         invoiceLayoutLinkLabel.grid(row=5, column=0, sticky="w", padx=30, pady=(5, 0))
         self.invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
         self.invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
@@ -61,15 +62,19 @@ class AddCompanyPage(ctk.CTkFrame):
         email = self.companyEmailEntry.get()
         layout = self.invoiceLayoutLinkEntry.get()
          
-        if not name:                   
-            print("Company name is required.")
+        if not name or not email or not layout:
+            messagebox.showerror("Input Error", "All fields are required.")
+            return
+
+        if "@" not in email or "." not in email:
+            messagebox.showerror("Input Error", "Please enter a valid company email address.")
             return
 
         # Build company object
         newCompany = Company(name, email, layout)  
 
         # Path to the logged-in user's file     
-        username = self.controller.current_user
+        username = self.controller.current_user.username if hasattr(self.controller.current_user, "username") else self.controller.current_user
         user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
 
         # Load existing data                     

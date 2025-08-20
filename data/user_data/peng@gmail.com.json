@@ -1,0 +1,15 @@
+{
+    "companies": [
+        {
+            "name": "Company",
+            "email": "Company@gmail.com",
+            "layout": "Company"
+        },
+        {
+            "name": "Company 2",
+            "email": "Company2@gmail.com",
+            "layout": "Company"
+        }
+    ],
+    "invoices": []
+}

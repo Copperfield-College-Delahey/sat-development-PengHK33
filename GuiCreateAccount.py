@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import json
 import os
+from tkinter import messagebox
+from AiUserandDatastorage import UserManager
 
 USERS_FILE = "users.json"
 
@@ -53,30 +55,32 @@ class CreateAccountPage(ctk.CTkFrame):
         email = self.addNewEmailEntry.get().strip()
         password = self.createPasswordEntry.get().strip()
 
+        # --- Validation checks ---
         if not email or not password:
-            print("Please enter both email and password.")
+            messagebox.showerror("Error", "Please enter both email and password.")
             return
 
-        # Load existing users
-        if os.path.exists(USERS_FILE):
-            with open(USERS_FILE, "r") as f:
-                users = json.load(f)
-        else:
-            users = {}
-
-        if email in users:
-            print("Account already exists!")
+        # Email format check
+        if "@" not in email:
+            messagebox.showerror("Error", "Please enter a valid email address.")
             return
 
-        # Save new user with their own data file
-        users[email] = {
-            "password": password,
-            "invoices": [],
-            "companies": []
-        }
-
-        with open(USERS_FILE, "w") as f:
-            json.dump(users, f, indent=4)
-
-        print(f"Account created for {email}")
+        # Password strength check
+        if len(password) < 6:
+            messagebox.showerror("Error", "Password must be at least 6 characters long.")
+            return
+        if not any(char.isdigit() for char in password):
+            messagebox.showerror("Error", "Password must contain at least one number.")
+            return
+        if not any(char.isupper() for char in password):
+            messagebox.showerror("Error", "Password must contain at least one uppercase letter.")
+            return
+        
+        #Use UserManager instead of writing JSON directly
+        success = self.manager.add_user(email, password)
+        if not success:
+            messagebox.showerror("Error", "Account already exists!")
+            return
+        
+        messagebox.showinfo("Success", f"Account created for {email}")
         self.controller.showLogin()
