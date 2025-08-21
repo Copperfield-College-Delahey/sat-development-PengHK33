@@ -1,0 +1,16 @@
+{
+    "peng@gmail.com": {
+        "companies": [
+            {
+                "name": "Comapnt",
+                "email": "company@gmail.com",
+                "layout": "asadsdsa"
+            },
+            {
+                "name": "Comapany1",
+                "email": "company1@gmail.com",
+                "layout": "asadsdsa"
+            }
+        ]
+    }
+}

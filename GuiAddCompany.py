@@ -58,55 +58,37 @@ class AddCompanyPage(ctk.CTkFrame):
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
 
     def saveCompanyInfo(self):
-        # Get entered values
-        name = self.companyNameEntry.get()
-        email = self.companyEmailEntry.get()
-        layout = self.invoiceLayoutLinkEntry.get()
-         
+        name = self.companyNameEntry.get().strip()
+        email = self.companyEmailEntry.get().strip()
+        layout = self.invoiceLayoutLinkEntry.get().strip()
+
         if not name or not email or not layout:
-            messagebox.showerror("Input Error", "All fields are required.")
+            messagebox.showerror("Error", "All fields must be filled in.")
             return
 
-        if "@" not in email or "." not in email:
-            messagebox.showerror("Input Error", "Please enter a valid company email address.")
-            return
+        newCompany = Company(name, email, layout)
 
-        # Build company object
-        newCompany = Company(name, email, layout)  
-
-        # Path to the logged-in user's file     
-        username = self.controller.current_user.username if hasattr(self.controller.current_user, "username") else self.controller.current_user
-        user_file = os.path.join(USER_DATA_DIR, f"{username}.json")
-
-        # Load existing data                     
-        if os.path.exists(user_file):
-            with open(user_file, "r") as f:
-                data = json.load(f)
+        # Save everything into users.json
+        users_file = os.path.join(USER_DATA_DIR, "users.json")
+        if os.path.exists(users_file):
+            with open(users_file, "r") as f:
+                users = json.load(f)
         else:
-            data = {"companies": [], "invoices": []}
+            users = {}
 
-        # Add the new company                    
-        data["companies"].append({
-            "name": newCompany.name,
-            "email": newCompany.email,
-            "layout": newCompany.layout
-        })
+        if self.controller.current_user:
+            user_data = users.setdefault(self.controller.current_user, {})
+            user_data.setdefault("companies", [])
+            user_data["companies"].append({
+                "name": newCompany.name,
+                "email": newCompany.email,
+                "layout": newCompany.layout
+            })
 
-        # Save back to file                  
-        with open(user_file, "w") as f:
-            json.dump(data, f, indent=4)
+            with open(users_file, "w") as f:
+                json.dump(users, f, indent=4)
 
-        print(f"Saved company '{name}' for user '{username}'")  
-
-        # Refresh the MainPage dropdown          
-        self.controller.mainPage.load_companies()
-
-        # Go back to main page 
+        messagebox.showinfo("Success", f"Company {name} saved!")
         self.controller.showMain()
-
-
-
-
-
-
-
+        self.controller.mainPage.load_companies()  # refresh dropdown immediately
+        

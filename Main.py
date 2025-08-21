@@ -1,6 +1,5 @@
 #Main.py:
 import customtkinter as ctk
-
 from GuiStartUpPage import LoginPage
 from GuiMainPage import MainPage
 from GuiAddCompany import AddCompanyPage
@@ -47,11 +46,12 @@ class App(ctk.CTk):
 
     # Optional helper methods
     def showLogin(self): self.loginPage.tkraise()
-    def showMain(self): self.mainPage.tkraise()
+    def showMain(self):
+        self.mainPage.load_companies()
+        self.mainPage.tkraise()
     def showAddCompany(self): self.addCompanyPage.tkraise()
     def showCreateAccount(self): self.createAccountPage.tkraise()
     def showPreviousInvoices(self): self.previousInvoicesPage.tkraise()
-
 if __name__ == "__main__":
     app = App()
     app.mainloop()

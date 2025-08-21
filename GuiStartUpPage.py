@@ -3,6 +3,7 @@ import customtkinter as ctk
 import json
 import os
 from tkinter import messagebox
+from Invoice import Company
 
 USERS_FILE = "users.json"
 
@@ -73,12 +74,8 @@ class LoginPage(ctk.CTkFrame):
             messagebox.showerror("Error", "No accounts found. Please create an account first.")
             return
 
-        # Load users safely
-        try:
-            with open(USERS_FILE, "r") as f:
-                users = json.load(f)
-        except json.JSONDecodeError:
-            users = {}  # fallback if file is empty/corrupted
+        with open(USERS_FILE, "r") as f:
+            users = json.load(f)
 
         if email not in users:
             messagebox.showerror("Error", "Account does not exist.")
@@ -88,7 +85,13 @@ class LoginPage(ctk.CTkFrame):
             messagebox.showerror("Error", "Incorrect password.")
             return
 
-        # Success
+        #  Load companies into memory
+        companies_data = users[email].get("companies", [])
+        self.controller.companyList = [
+            Company(c["name"], c["email"], c["layout"]) for c in companies_data
+        ]
+
         self.controller.current_user = email
-        messagebox.showinfo("Success", f"Logged in as {email}")
+
+        messagebox.showinfo("Success", f"Welcome back, {email}!")
         self.controller.showMain()
