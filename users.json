@@ -3,5 +3,10 @@
         "password": "Password1",
         "invoices": [],
         "companies": []
+    },
+    "user@gmail.com": {
+        "password": "Password1",
+        "invoices": [],
+        "companies": []
     }
 }

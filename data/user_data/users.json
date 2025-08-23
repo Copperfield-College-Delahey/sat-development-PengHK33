@@ -12,5 +12,14 @@
                 "layout": "asadsdsa"
             }
         ]
+    },
+    "user@gmail.com": {
+        "companies": [
+            {
+                "name": "company1",
+                "email": "company1@gmail.com",
+                "layout": "company1"
+            }
+        ]
     }
 }
