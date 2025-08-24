@@ -1,9 +1,18 @@
-#GuiMainPage.py:
+# GuiMainPage.py
 import customtkinter as ctk
-from Invoice import Invoice
+from Invoice import Invoice, Company
 import json, os                       
 from AiUserandDatastorage import USER_DATA_DIR
 from tkinter import messagebox
+
+# --- Google Sheets setup ---
+import gspread
+from google.oauth2.service_account import Credentials
+
+scopes = ["https://www.googleapis.com/auth/spreadsheets"]
+creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+client = gspread.authorize(creds)
+
 
 class MainPage(ctk.CTkFrame):
     def __init__(self, master, controller):
@@ -35,7 +44,7 @@ class MainPage(ctk.CTkFrame):
         bottomFrame.grid_columnconfigure(0, weight=1)
         bottomFrame.grid_columnconfigure(1, weight=1)
 
-        submitButton = ctk.CTkButton(bottomFrame, text="Submit",command=self.getInvoiceData) 
+        submitButton = ctk.CTkButton(bottomFrame, text="Submit", command=self.getInvoiceData) 
         submitButton.grid(row=0, column=1, padx=10, pady=10, sticky="e")
 
         backButton = ctk.CTkButton(bottomFrame, text="Back", command=self.controller.showLogin)
@@ -55,6 +64,9 @@ class MainPage(ctk.CTkFrame):
         entryFieldFrame.grid_rowconfigure(8, weight=1)
         entryFieldFrame.grid_rowconfigure(9, weight=1)
 
+        self.companyDropdown = ctk.CTkComboBox(entryFieldFrame, values=["No companies"])
+        self.companyDropdown.grid(row=9, column=0, padx=10, pady=10, sticky="w")
+
         # Entryframe Entryfields
         self.poNumberEntry = ctk.CTkEntry(entryFieldFrame, width=200)
         self.poNumberEntry.grid(row=1, column=0, padx=10, pady=10, sticky="w")
@@ -64,8 +76,6 @@ class MainPage(ctk.CTkFrame):
         self.UnitPriceEntry.grid(row=5, column=0, padx=10, pady=10, sticky="w")
         self.SupervisorEntry = ctk.CTkEntry(entryFieldFrame, width=200)
         self.SupervisorEntry.grid(row=7, column=0, padx=10, pady=10, sticky="w")
-        self.companyDropdown = ctk.CTkComboBox(entryFieldFrame, values=["No companies"])
-        self.companyDropdown.grid(row=9, column=0, padx=10, pady=10, sticky="w")
 
         # Entryframe labels
         poNumberLabel = ctk.CTkLabel(entryFieldFrame, text="Po Number:", font=("Aptos", 12))
@@ -93,62 +103,85 @@ class MainPage(ctk.CTkFrame):
         previewFrame.grid_columnconfigure(0, weight=1)
         previewFrame.grid_columnconfigure(1, weight=0)
     
-    
-    def getInvoiceData(self):
-        poNumber = self.poNumberEntry.get().strip()
-        jobAddress = self.jobAddressEntry.get().strip()
-        unitPrice = self.UnitPriceEntry.get().strip()
-        supervisor = self.SupervisorEntry.get().strip()
-        company = self.companyDropdown.get().strip()
-
-        # --- Validation checks ---
-        if not poNumber or not jobAddress or not unitPrice or not supervisor or not company:
-            messagebox.showerror("Error", "All fields must be filled in.")
-            return None
-
-        # PO Number must contain only digits and "/" somewhere
-        if "/" not in poNumber or not all(part.isdigit() for part in poNumber.split("/") if part):
-            messagebox.showerror("Error", "PO Number must be numeric and contain '/'. Example: 123/45")
-            return None
-
-        # Unit price must be a float or integer
+        
+    def getInvoiceData(company, poNumber, jobAddress, unitPrice, supervisor):
         try:
-            float(unitPrice)
-        except ValueError:
-            messagebox.showerror("Error", "Unit Price must be a number (integer or float).")
-            return None
-            
+            if not company or not getattr(company, "googleSheetId", None):
+                messagebox.showwarning("Warning", "This company does not have a linked Google Sheet ID.")
+                return
 
-        # --- If all good, create invoice ---
-        invoice = Invoice(
-            poNumber=poNumber,
-            jobAddress=jobAddress,
-            unitPrices=float(unitPrice),  # store as flaot
-            supervisor=supervisor,
-            companyEmailAddress="placeholder@gmail.com",
-            Company=company
-        )
-        messagebox.showinfo("Success", "You have saved the invoice.")
-        return invoice
+            # --- Open Google Sheet ---
+            sheet = client.open_by_key(company.googleSheetId).sheet1
+
+            # --- Update normal values ---
+            sheet.update("G7", [[poNumber]])      # PO Number
+            sheet.update("B19", [[jobAddress]])   # Job Address
+            sheet.update("F19", [[unitPrice]])    # Unit Price
+            sheet.update("B15", [[supervisor]])   # Supervisor
+
+            # --- Increment invoice number (G6) ---
+            current_invoice = sheet.acell("G6").value
+            current_invoice = int(current_invoice) if str(current_invoice).isdigit() else 0
+            sheet.update("G6", [[current_invoice + 1]])
+
+            # --- Auto formulas ---
+            sheet.update("G19", [["=F19*0.1"]])      # 10% of unit price
+            sheet.update("G21", [["=G19+F19"]])      # total
+
+            # --- Apply formatting ---
+            from gspread_formatting import (
+                CellFormat, TextFormat, format_cell_range,
+                Color, NumberFormat
+            )
+
+            # Text style (bold, size 12, black)
+            bold_black = CellFormat(
+                textFormat=TextFormat(bold=True, fontSize=12, foregroundColor=Color(0, 0, 0))
+            )
+
+            # Money style
+            money_format = CellFormat(
+                numberFormat=NumberFormat(type="NUMBER", pattern="£#,##0.00")
+            )
+
+            # Apply text formatting
+            format_cell_range(sheet, "G7", bold_black)
+            format_cell_range(sheet, "B19", bold_black)
+            format_cell_range(sheet, "F19", bold_black)
+            format_cell_range(sheet, "B15", bold_black)
+            format_cell_range(sheet, "G6", bold_black)
+
+            # Apply money formatting
+            format_cell_range(sheet, "F19", money_format)
+            format_cell_range(sheet, "G19", money_format)
+            format_cell_range(sheet, "G21", money_format)
+
+            messagebox.showinfo("Success", f"Invoice saved and updated in {company.name}'s Google Sheet.")
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to update Google Sheet: {e}")
+
 
     def load_companies(self):
-        """Load companies for the logged-in user and update dropdown."""
-        username = self.controller.current_user
-        users_file = os.path.join(USER_DATA_DIR, "users.json")
+        """Reload companies from JSON for the current user"""
+        import json, os
+        USERS_FILE = "users.json"
 
-        if os.path.exists(users_file):
-            with open(users_file, "r") as f:
+        self.controller.companyList = []  # clear previous list
+
+        if self.controller.current_user and os.path.exists(USERS_FILE):
+            with open(USERS_FILE, "r") as f:
                 users = json.load(f)
-            user_data = users.get(username, {})
-            companies = [c["name"] for c in user_data.get("companies", [])]
-        else:
-            companies = []
+            companies_data = users[self.controller.current_user].get("companies", [])
+            self.controller.companyList = [
+                Company(c["name"], c["email"], c["googleSheetId"]) for c in companies_data
+            ]
 
-        self.companyDropdown.configure(values=companies if companies else ["No companies"])
-    
-        if companies:
-            self.companyDropdown.set(companies[0])  # select first by default
+        # Update dropdown
+        if self.controller.companyList:
+            names = [c.name for c in self.controller.companyList]
+            self.companyDropdown.configure(values=names)
+            self.companyDropdown.set(names[0])
         else:
-            self.companyDropdown.set("No companies")  # leave as placeholder if empty
-  
-   
+            self.companyDropdown.configure(values=["No companies"])
+            self.companyDropdown.set("No companies")

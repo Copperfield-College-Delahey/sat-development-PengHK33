@@ -62,6 +62,8 @@ class LoginPage(ctk.CTkFrame):
     
     import json
 
+    # GuiStartUpPage.py
+
     def logIn(self):
         email = self.LogInEntry.get().strip()
         password = self.passwordEntry.get().strip()
@@ -70,11 +72,11 @@ class LoginPage(ctk.CTkFrame):
             messagebox.showerror("Error", "Please enter both email and password.")
             return
 
-        if not os.path.exists(USERS_FILE):
+        if not os.path.exists("users.json"):
             messagebox.showerror("Error", "No accounts found. Please create an account first.")
             return
 
-        with open(USERS_FILE, "r") as f:
+        with open("users.json", "r") as f:
             users = json.load(f)
 
         if email not in users:
@@ -85,13 +87,12 @@ class LoginPage(ctk.CTkFrame):
             messagebox.showerror("Error", "Incorrect password.")
             return
 
-        #  Load companies into memory
+        # Load companies into memory
         companies_data = users[email].get("companies", [])
         self.controller.companyList = [
-            Company(c["name"], c["email"], c["layout"]) for c in companies_data
+            Company(c["name"], c["email"], c["googleSheetId"]) for c in companies_data
         ]
 
         self.controller.current_user = email
-
         messagebox.showinfo("Success", f"Welcome back, {email}!")
         self.controller.showMain()

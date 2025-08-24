@@ -1,4 +1,4 @@
-#GuiAddCompany.py:
+# GuiAddCompany.py:
 import customtkinter as ctk
 from Invoice import Company
 import json, os                       
@@ -20,8 +20,8 @@ class AddCompanyPage(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
         self.grid_rowconfigure(2, weight=1)
 
-        # Login frame
-        mainBox = ctk.CTkFrame(self, corner_radius=10, width=400, height=400)
+        # Main frame box
+        mainBox = ctk.CTkFrame(self, corner_radius=15, width=600, height=600)
         mainBox.grid(row=1, column=1)
         mainBox.grid_propagate(False)
         mainBox.grid_columnconfigure(0, weight=1)
@@ -31,7 +31,7 @@ class AddCompanyPage(ctk.CTkFrame):
         newCompanyTitle = ctk.CTkLabel(mainBox, text="Add New Company:", font=("Aptos", 24, "bold"), anchor="w", justify="left")
         newCompanyTitle.grid(row=0, column=0, padx=30, pady=(15, 5), sticky="w")
 
-        # New Company Name
+        # Company Name
         CompanNameLabel = ctk.CTkLabel(mainBox, text="Company Name:", font=("Aptos", 13))
         CompanNameLabel.grid(row=1, column=0, sticky="w", padx=30, pady=(5, 0))
         self.companyNameEntry = ctk.CTkEntry(mainBox, width=290)
@@ -43,52 +43,55 @@ class AddCompanyPage(ctk.CTkFrame):
         self.companyEmailEntry = ctk.CTkEntry(mainBox, width=290)
         self.companyEmailEntry.grid(row=4, column=0, padx=30, pady=(0, 10), sticky="w")
 
-        # Google Form layout Link
-        invoiceLayoutLinkLabel = ctk.CTkLabel(mainBox, text="Company layout link:", font=("Aptos", 13))
-        invoiceLayoutLinkLabel.grid(row=5, column=0, sticky="w", padx=30, pady=(5, 0))
-        self.invoiceLayoutLinkEntry = ctk.CTkEntry(mainBox, width=290)
-        self.invoiceLayoutLinkEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
+        #  
+        sheetIdLabel = ctk.CTkLabel(mainBox, text="Google Sheet ID:", font=("Aptos", 13))
+        sheetIdLabel.grid(row=5, column=0, sticky="w", padx=30, pady=(5, 0))
+        self.sheetIdEntry = ctk.CTkEntry(mainBox, width=290)
+        self.sheetIdEntry.grid(row=6, column=0, padx=30, pady=(0, 10), sticky="w")
 
-        # Back Button (goes back to Mainpage)
+        # Back Button
         cancelButton = ctk.CTkButton(mainBox, text="Cancel", width=80, command=self.controller.showMain)
         cancelButton.grid(row=7, column=0, padx=30, pady=(15, 10), sticky="w")
 
-        # Submit Button (you can later change this to save data, then go to another page)
+        # Submit Button
         submitButton = ctk.CTkButton(mainBox, text="Submit", width=80, command=self.saveCompanyInfo)
         submitButton.grid(row=7, column=1, padx=30, pady=(15, 10), sticky="w")
 
     def saveCompanyInfo(self):
         name = self.companyNameEntry.get().strip()
         email = self.companyEmailEntry.get().strip()
-        layout = self.invoiceLayoutLinkEntry.get().strip()
+        sheet_id = self.sheetIdEntry.get().strip()
 
-        if not name or not email or not layout:
+        if not name or not email or not sheet_id:
             messagebox.showerror("Error", "All fields must be filled in.")
             return
 
-        newCompany = Company(name, email, layout)
+        newCompany = Company(name, email, sheet_id)
 
-        # Save everything into users.json
-        users_file = os.path.join(USER_DATA_DIR, "users.json")
-        if os.path.exists(users_file):
-            with open(users_file, "r") as f:
+        # --- Load users ---
+        if os.path.exists("users.json"):
+            with open("users.json", "r") as f:
                 users = json.load(f)
         else:
             users = {}
 
         if self.controller.current_user:
-            user_data = users.setdefault(self.controller.current_user, {})
+            user_data = users.setdefault(self.controller.current_user, {
+                "password": "",
+                "invoices": [],
+                "companies": []
+            })
             user_data.setdefault("companies", [])
             user_data["companies"].append({
                 "name": newCompany.name,
                 "email": newCompany.email,
-                "layout": newCompany.layout
+                "googleSheetId": newCompany.googleSheetId
             })
 
-            with open(users_file, "w") as f:
+            # --- Save back ---
+            with open("users.json", "w") as f:
                 json.dump(users, f, indent=4)
 
         messagebox.showinfo("Success", f"Company {name} saved!")
-        self.controller.showMain()
-        self.controller.mainPage.load_companies()  # refresh dropdown immediately
-        
+        self.controller.mainPage.load_companies()
+        self.controller.showMain()  # refresh dropdown

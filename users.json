@@ -2,11 +2,17 @@
     "peng@gmail.com": {
         "password": "Password1",
         "invoices": [],
-        "companies": []
-    },
-    "user@gmail.com": {
-        "password": "Password1",
-        "invoices": [],
-        "companies": []
+        "companies": [
+            {
+                "name": "comapany1",
+                "email": "comapany1@gmail.com",
+                "googleSheetId": "123445"
+            },
+            {
+                "name": "Metricon",
+                "email": "metricon@evolveinvoices.com.au",
+                "googleSheetId": "13u7gcrB7lwsGDeewPgjUsCDIF8Cgwn8_TaCRY2XflAc"
+            }
+        ]
     }
 }

@@ -1,8 +1,7 @@
-#Invoice.py:
 import customtkinter as ctk
 
 class Invoice: 
-    def __init__(self,poNumber,jobAddress, unitPrices, supervisor, companyEmailAddress, Company):
+    def __init__(self, poNumber, jobAddress, unitPrices, supervisor, companyEmailAddress, Company):
         self.poNumber = poNumber
         self.jobAddress = jobAddress
         self.unitPrices = unitPrices
@@ -11,9 +10,7 @@ class Invoice:
         self.Company = Company
 
 class Company:
-    def __init__(self, CompanyName, companyEmailAddress, invoiceLayoutLink):
+    def __init__(self, CompanyName, companyEmailAddress, googleSheetId):
         self.name = CompanyName  
         self.email = companyEmailAddress        
-        self.layout = invoiceLayoutLink
-
-
+        self.googleSheetId = googleSheetId   # renamed from invoiceLayoutLink

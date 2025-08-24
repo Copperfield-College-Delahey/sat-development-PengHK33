@@ -5,6 +5,21 @@ from GuiMainPage import MainPage
 from GuiAddCompany import AddCompanyPage
 from GuiCreateAccount import CreateAccountPage
 from GuiPreviousInvoice import PreviousInvoicesPage
+import gspread 
+from google.oauth2.service_account import Credentials
+
+scopes = [
+    "https://www.googleapis.com/auth/spreadsheets"
+]
+
+creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+client = gspread.authorize(creds)
+
+googleSheetId = "13u7gcrB7lwsGDeewPgjUsCDIF8Cgwn8_TaCRY2XflAc"
+sheet = client.open_by_key(googleSheetId)
+
+values_list = sheet.sheet1.row_values(1)
+print(values_list)
 
 class App(ctk.CTk):
     def __init__(self):
