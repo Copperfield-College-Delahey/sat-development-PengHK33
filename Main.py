@@ -1,4 +1,5 @@
 #Main.py:
+import os
 import customtkinter as ctk
 from GuiStartUpPage import LoginPage
 from GuiMainPage import MainPage
@@ -8,18 +9,19 @@ from GuiPreviousInvoice import PreviousInvoicesPage
 import gspread 
 from google.oauth2.service_account import Credentials
 
-scopes = [
-    "https://www.googleapis.com/auth/spreadsheets"
-]
+scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 
-creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+# Get path to credentials.json relative to this script
+current_dir = os.path.dirname(__file__)
+key_path = os.path.join(current_dir, "credentials.json")
+
+# Load credentials and authorize gspread client
+creds = Credentials.from_service_account_file(key_path, scopes=scopes)
 client = gspread.authorize(creds)
 
+# Replace with your Google Sheet ID
 googleSheetId = "13u7gcrB7lwsGDeewPgjUsCDIF8Cgwn8_TaCRY2XflAc"
 sheet = client.open_by_key(googleSheetId)
-
-values_list = sheet.sheet1.row_values(1)
-print(values_list)
 
 class App(ctk.CTk):
     def __init__(self):
