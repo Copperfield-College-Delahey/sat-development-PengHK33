@@ -4,13 +4,19 @@ from Invoice import Invoice, Company
 import json, os                       
 from AiUserandDatastorage import USER_DATA_DIR
 from tkinter import messagebox
-
+from gspread_formatting import (
+    CellFormat, TextFormat, format_cell_range,
+    Color, NumberFormat
+)
 # --- Google Sheets setup ---
 import gspread
 from google.oauth2.service_account import Credentials
 
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
-creds = Credentials.from_service_account_file("credentials.json", scopes=scopes)
+current_dir = os.path.dirname(__file__)
+key_path = os.path.join(current_dir, "secrets", "credentials.json")
+
+creds = Credentials.from_service_account_file(key_path, scopes=scopes)
 client = gspread.authorize(creds)
 
 
@@ -104,8 +110,19 @@ class MainPage(ctk.CTkFrame):
         previewFrame.grid_columnconfigure(1, weight=0)
     
         
-    def getInvoiceData(company, poNumber, jobAddress, unitPrice, supervisor):
+    def getInvoiceData(self):
         try:
+            from datetime import datetime
+            # Get values from entry fields
+            poNumber = self.poNumberEntry.get()
+            jobAddress = self.jobAddressEntry.get()
+            unitPrice = self.UnitPriceEntry.get()
+            supervisor = self.SupervisorEntry.get()
+
+            # Get selected company object
+            company_name = self.companyDropdown.get()
+            company = next((c for c in self.controller.companyList if c.name == company_name), None)
+
             if not company or not getattr(company, "googleSheetId", None):
                 messagebox.showwarning("Warning", "This company does not have a linked Google Sheet ID.")
                 return
@@ -119,14 +136,18 @@ class MainPage(ctk.CTkFrame):
             sheet.update("F19", [[unitPrice]])    # Unit Price
             sheet.update("B15", [[supervisor]])   # Supervisor
 
+            # --- Set today's date in G4 ---
+            today_str = datetime.today().strftime("%d/%m/%Y")  # e.g., 25/08/2025
+            sheet.update("G4", [[today_str]])
+
             # --- Increment invoice number (G6) ---
             current_invoice = sheet.acell("G6").value
             current_invoice = int(current_invoice) if str(current_invoice).isdigit() else 0
             sheet.update("G6", [[current_invoice + 1]])
 
-            # --- Auto formulas ---
-            sheet.update("G19", [["=F19*0.1"]])      # 10% of unit price
-            sheet.update("G21", [["=G19+F19"]])      # total
+            # --- Auto formulas (use update_acell so Sheets evaluates them) ---
+            sheet.update_acell("G19", "=F19*0.1")   # 10% GST
+            sheet.update_acell("G21", "=G19+F19")   # Total
 
             # --- Apply formatting ---
             from gspread_formatting import (
@@ -134,25 +155,23 @@ class MainPage(ctk.CTkFrame):
                 Color, NumberFormat
             )
 
-            # Text style (bold, size 12, black)
             bold_black = CellFormat(
                 textFormat=TextFormat(bold=True, fontSize=12, foregroundColor=Color(0, 0, 0))
             )
-
-            # Money style
             money_format = CellFormat(
-                numberFormat=NumberFormat(type="NUMBER", pattern="£#,##0.00")
+                numberFormat=NumberFormat(type="NUMBER", pattern="$#,##0.00")
             )
 
-            # Apply text formatting
+            # Keep bold on titles only
             format_cell_range(sheet, "G7", bold_black)
             format_cell_range(sheet, "B19", bold_black)
-            format_cell_range(sheet, "F19", bold_black)
             format_cell_range(sheet, "B15", bold_black)
             format_cell_range(sheet, "G6", bold_black)
 
-            # Apply money formatting
+            # F19 should NOT be bold, only currency
             format_cell_range(sheet, "F19", money_format)
+
+            # Currency for calculated cells
             format_cell_range(sheet, "G19", money_format)
             format_cell_range(sheet, "G21", money_format)
 

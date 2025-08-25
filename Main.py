@@ -11,9 +11,9 @@ from google.oauth2.service_account import Credentials
 
 scopes = ["https://www.googleapis.com/auth/spreadsheets"]
 
-# Get path to credentials.json relative to this script
+# Always load from secrets/credentials.json (relative to this script)
 current_dir = os.path.dirname(__file__)
-key_path = os.path.join(current_dir, "credentials.json")
+key_path = os.path.join(current_dir, "secrets", "credentials.json")
 
 # Load credentials and authorize gspread client
 creds = Credentials.from_service_account_file(key_path, scopes=scopes)
